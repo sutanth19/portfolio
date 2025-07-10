@@ -29,32 +29,39 @@ export default function LogoMarquee() {
     "expo",
     "django",
     "xampp",
-    "vitejs", 
+    "Vite.js",
   ];
 
+  // Duplicate the array to create a seamless loop
+  const allLogos = logos.concat(logos);
+
   return (
-    <section className="overflow-hidden py-10 bg-backgroundLight dark:bg-backgroundDark">
+    <section className="overflow-hidden py-1 bg-backgroundLight dark:bg-backgroundDark">
       <motion.div
-        className="flex gap-10 w-max"
-        animate={{ x: ["100%", "-100%"] }}
-        transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        className="flex gap-6"
+        style={{
+          // Each logo container is 4rem wide (w-16) + 1.5rem gap;
+          // duplicating logos.list length gives total width of two sets
+          width: `calc(2 * (4rem + 1.5rem) * ${logos.length})`,
+        }}
+        animate={{ x: ["0%", "-50%"] }}                // slide from start to halfway
+        transition={{
+          duration: 40,                                 // adjust speed as desired
+          ease: "linear",                              // perfectly constant speed
+          repeat: Infinity,                            // loop forever
+        }}
       >
-        {logos.map((name, i) => (
-          <img
+        {allLogos.map((name, i) => (
+          <div
             key={i}
-            src={`/logos/${name}.svg`}
-            alt={name}
-            className="h-12 w-auto"
-          />
-        ))}
-        {/* Repeat for seamless looping */}
-        {logos.map((name, i) => (
-          <img
-            key={`repeat-${i}`}
-            src={`/logos/${name}.svg`}
-            alt={name}
-            className="h-12 w-auto"
-          />
+            className="w-16 h-16 rounded-xl bg-[#1f1f1f] dark:bg-[#2a2a2a] flex items-center justify-center shadow-md"
+          >
+            <img
+              src={`/logos/${name}.svg`}
+              alt={name}
+              className="w-8 h-8 object-contain"
+            />
+          </div>
         ))}
       </motion.div>
     </section>
