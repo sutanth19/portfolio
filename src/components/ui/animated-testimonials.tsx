@@ -1,16 +1,41 @@
 "use client";
 
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "motion/react";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 type Testimonial = {
   quote: string;
   name: string;
   designation: string;
+  techStack: string;
   src: string;
 };
+
+// Enhanced intersection observer hook
+function useIntersectionObserver(threshold = 0.1, rootMargin = "0px") {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [intersectionRatio, setIntersectionRatio] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+        setIntersectionRatio(entry.intersectionRatio);
+      },
+      { threshold, rootMargin }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [threshold, rootMargin]);
+
+  return { ref, isIntersecting, intersectionRatio };
+}
+
 export const AnimatedTestimonials = ({
   testimonials,
   autoplay = false,
@@ -19,6 +44,7 @@ export const AnimatedTestimonials = ({
   autoplay?: boolean;
 }) => {
   const [active, setActive] = useState(0);
+  const { ref: containerRef, isIntersecting } = useIntersectionObserver(0.3);
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -28,138 +54,143 @@ export const AnimatedTestimonials = ({
     setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const isActive = (index: number) => {
-    return index === active;
-  };
-
   useEffect(() => {
-    if (autoplay) {
+    if (autoplay && isIntersecting) {
       const interval = setInterval(handleNext, 5000);
       return () => clearInterval(interval);
     }
-  }, [autoplay]);
+  }, [autoplay, isIntersecting]);
 
-  const randomRotateY = () => {
-    return Math.floor(Math.random() * 21) - 10;
-  };
   return (
-    <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
-      <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2">
-        <div>
-          <div className="relative h-80 w-full">
-            <AnimatePresence>
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={testimonial.src}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.9,
-                    z: -100,
-                    rotate: randomRotateY(),
-                  }}
-                  animate={{
-                    opacity: isActive(index) ? 1 : 0.7,
-                    scale: isActive(index) ? 1 : 0.95,
-                    z: isActive(index) ? 0 : -100,
-                    rotate: isActive(index) ? 0 : randomRotateY(),
-                    zIndex: isActive(index)
-                      ? 40
-                      : testimonials.length + 2 - index,
-                    y: isActive(index) ? [0, -80, 0] : 0,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0.9,
-                    z: 100,
-                    rotate: randomRotateY(),
-                  }}
-                  transition={{
-                    duration: 0.4,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute inset-0 origin-bottom"
-                >
-                  <img
-                    src={testimonial.src}
-                    alt={testimonial.name}
-                    width={500}
-                    height={500}
-                    draggable={false}
-                    className="h-full w-full rounded-3xl object-cover object-center"
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
+    <>
+      <div ref={containerRef} className="mx-auto max-w-7xl px-4 py-6 font-sans antialiased">
+        <div className="relative grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+          {/* Image Section with Fixed Size */}
+          <div className="order-2 lg:order-1">
+            <div className="relative h-96 w-full">
+              <div className="relative overflow-hidden rounded-2xl">
+                <img
+                  src={testimonials[active].src}
+                  alt={testimonials[active].name}
+                  width={500}
+                  height={400}
+                  draggable={false}
+                  className="h-96 w-full object-cover object-center"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="flex flex-col justify-between py-4">
-          <motion.div
-            key={active}
-            initial={{
-              y: 20,
-              opacity: 0,
-            }}
-            animate={{
-              y: 0,
-              opacity: 1,
-            }}
-            exit={{
-              y: -20,
-              opacity: 0,
-            }}
-            transition={{
-              duration: 0.2,
-              ease: "easeInOut",
-            }}
-          >
-            <h3 className="text-2xl font-bold text-black dark:text-white">
-              {testimonials[active].name}
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-neutral-500">
-              {testimonials[active].designation}
-            </p>
-            <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
-              {testimonials[active].quote.split(" ").map((word, index) => (
-                <motion.span
-                  key={index}
-                  initial={{
-                    filter: "blur(10px)",
-                    opacity: 0,
-                    y: 5,
-                  }}
-                  animate={{
-                    filter: "blur(0px)",
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeInOut",
-                    delay: 0.02 * index,
-                  }}
-                  className="inline-block"
+
+          {/* Content Section with Staggered Animations */}
+          <div className="order-1 lg:order-2 flex flex-col justify-center space-y-6">
+            <div className="space-y-4">
+              {/* Project Title with Slide Animation */}
+              <div className={`space-y-1 transform transition-all duration-1000 ease-out ${
+                isIntersecting 
+                  ? 'translate-y-0 opacity-100' 
+                  : 'translate-y-8 opacity-0'
+              }`} style={{ transitionDelay: '200ms' }}>
+                <h3 className="text-2xl lg:text-3xl font-bold text-black dark:text-white leading-tight relative group">
+                  <span className="relative z-10">{testimonials[active].name}</span>
+                  <div className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transform origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100"></div>
+                </h3>
+                <p className="text-sm lg:text-base text-gray-600 dark:text-neutral-400 font-medium">
+                  {testimonials[active].designation}
+                </p>
+              </div>
+              
+              {/* Tech Stack Section with Bounce Animation */}
+              <div className={`space-y-2 transform transition-all duration-1000 ease-out ${
+                isIntersecting 
+                  ? 'translate-y-0 opacity-100' 
+                  : 'translate-y-8 opacity-0'
+              }`} style={{ transitionDelay: '400ms' }}>
+                <h4 className="text-sm font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">
+                  Tech Stack
+                </h4>
+                <div className="h-20 overflow-hidden">
+                  <div className="flex flex-wrap gap-2">
+                    {testimonials[active].techStack.split(', ').map((tech, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1.5 text-xs lg:text-sm bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200/50 dark:border-blue-700/50 font-medium hover:shadow-lg hover:scale-105 transition-all duration-300 transform hover:-translate-y-1"
+                        style={{ 
+                          animationDelay: `${index * 100}ms`,
+                          animation: isIntersecting ? 'fadeInUp 0.6s ease-out forwards' : 'none'
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Project Description with Typewriter Effect */}
+              <div className={`space-y-3 transform transition-all duration-1000 ease-out ${
+                isIntersecting 
+                  ? 'translate-y-0 opacity-100' 
+                  : 'translate-y-8 opacity-0'
+              }`} style={{ transitionDelay: '600ms' }}>
+                <p className="text-base lg:text-lg text-gray-700 dark:text-neutral-300 leading-relaxed">
+                  {testimonials[active].quote}
+                </p>
+              </div>
+            </div>
+
+            {/* Navigation Controls with Pulse Animation */}
+            <div className={`flex items-center justify-between pt-2 transform transition-all duration-1000 ease-out ${
+              isIntersecting 
+                ? 'translate-y-0 opacity-100' 
+                : 'translate-y-8 opacity-0'
+            }`} style={{ transitionDelay: '800ms' }}>
+              <div className="flex gap-3">
+                <button
+                  onClick={handlePrev}
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-neutral-800 shadow-lg border border-gray-200 dark:border-neutral-700"
                 >
-                  {word}&nbsp;
-                </motion.span>
-              ))}
-            </motion.p>
-          </motion.div>
-          <div className="flex gap-4 pt-12 md:pt-0">
-            <button
-              onClick={handlePrev}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
-            >
-              <IconArrowLeft className="h-5 w-5 text-black transition-transform duration-300 group-hover/button:rotate-12 dark:text-neutral-400" />
-            </button>
-            <button
-              onClick={handleNext}
-              className="group/button flex h-7 w-7 items-center justify-center rounded-full bg-gray-100 dark:bg-neutral-800"
-            >
-              <IconArrowRight className="h-5 w-5 text-black transition-transform duration-300 group-hover/button:-rotate-12 dark:text-neutral-400" />
-            </button>
+                  <IconArrowLeft className="h-5 w-5 text-gray-700 dark:text-neutral-300" />
+                </button>
+                <button
+                  onClick={handleNext}
+                  className="flex h-12 w-12 items-center justify-center rounded-full bg-white dark:bg-neutral-800 shadow-lg border border-gray-200 dark:border-neutral-700"
+                >
+                  <IconArrowRight className="h-5 w-5 text-gray-700 dark:text-neutral-300" />
+                </button>
+              </div>
+              
+              {/* Progress Indicator */}
+              <div className="flex items-center gap-2">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActive(index)}
+                    className={`h-2 rounded-full ${
+                      index === active 
+                        ? 'w-8 bg-gradient-to-r from-blue-500 to-purple-500' 
+                        : 'w-2 bg-gray-300 dark:bg-neutral-600'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      {/* CSS Keyframes */}
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </>
   );
 };
