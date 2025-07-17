@@ -59,14 +59,14 @@ function TechCard({ title, category, items, titleColor, delay = 0 }: TechCardPro
       }`}
       style={{ transitionDelay: `${delay}ms` }}
     >
-      <CardSpotlight className="h-full w-full max-w-sm p-8 bg-neutral-900 border-neutral-800 rounded-2xl shadow-lg shadow-neutral-800/50 hover:scale-105 transition-transform duration-300 ease-in-out">
+      <CardSpotlight className="h-full w-full max-w-sm p-6 bg-neutral-900 border-neutral-800 rounded-2xl shadow-lg shadow-neutral-800/50 hover:scale-105 transition-transform duration-300 ease-in-out">
         <div className="relative z-20">
-          <h3 className={`text-xl font-bold ${titleColor} mb-6 transform transition-all duration-700 ${
+          <h3 className={`text-lg font-bold ${titleColor} mb-4 transform transition-all duration-700 ${
             isIntersecting ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
           }`}>
             {title}
           </h3>
-          <div className="space-y-3 text-neutral-300">
+          <div className="space-y-2 text-neutral-300">
             {items.map((item, index) => (
               <div 
                 key={index} 
@@ -96,7 +96,7 @@ function AnimatedAvatar() {
       ref={ref}
       className="flex justify-center items-center"
     >
-      <div className={`relative w-80 h-80 lg:w-96 lg:h-96 transform transition-all duration-1000 ease-out ${
+      <div className={`relative w-64 h-64 lg:w-72 lg:h-72 transform transition-all duration-1000 ease-out ${
         isIntersecting 
           ? 'scale-100 opacity-100 rotate-0' 
           : 'scale-75 opacity-0 rotate-12'
@@ -129,9 +129,9 @@ function AnimatedHeader() {
   return (
     <div 
       ref={ref}
-      className="flex flex-col items-center justify-center text-center"
+      className="flex flex-col items-center justify-center text-center mb-12"
     >
-      <h2 className={`text-3xl md:text-5xl font-bold transform transition-all duration-1000 ease-out ${
+      <h2 className={`text-3xl md:text-4xl font-bold transform transition-all duration-1000 ease-out ${
         isIntersecting 
           ? 'translate-y-0 opacity-100' 
           : 'translate-y-8 opacity-0'
@@ -148,7 +148,7 @@ function AnimatedMarquee() {
   return (
     <div 
       ref={ref}
-      className={`transform transition-all duration-1000 ease-out ${
+      className={`mt-12 transform transition-all duration-1000 ease-out ${
         isIntersecting 
           ? 'translate-y-0 opacity-100' 
           : 'translate-y-8 opacity-0'
@@ -163,18 +163,16 @@ export default function TechStackSection() {
   return (
     <section
       id="techstack"
-      className="py-20 bg-backgroundLight dark:bg-backgroundDark text-foregroundLight dark:text-foregroundDark overflow-hidden"
+      className="section-spacing bg-backgroundLight dark:bg-backgroundDark text-foregroundLight dark:text-foregroundDark overflow-hidden"
     >
-      <div className="section-container space-y-8">
-
-        
+      <div className="section-container">
         <AnimatedHeader />
 
         {/* Main Layout with Avatar in Center */}
-        <div className="hidden lg:grid lg:grid-cols-3 gap-8 items-center">
+        <div className="hidden lg:grid lg:grid-cols-3 gap-6 items-center">
           
           {/* Left Column - Frontend & Backend Cards */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <TechCard
               title="Frontend"
               category="frontend"
@@ -203,7 +201,7 @@ export default function TechStackSection() {
           <AnimatedAvatar />
 
           {/* Right Column - Database & Tools Cards */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <TechCard
               title="Database"
               category="database"
@@ -230,16 +228,16 @@ export default function TechStackSection() {
         </div>
 
         {/* Mobile Layout - Stacked Cards */}
-        <div className="lg:hidden space-y-6">
+        <div className="lg:hidden space-y-4">
           {/* Avatar centered on mobile */}
           <div className="flex justify-center items-center">
-            <div className="relative w-64 h-64">
+            <div className="relative w-48 h-48">
               <AnimatedAvatar />
             </div>
           </div>
           
           {/* Cards in 2-column grid on mobile */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <TechCard
               title="Frontend"
               category="frontend"
@@ -288,7 +286,6 @@ export default function TechStackSection() {
         </div>
 
         <AnimatedMarquee />
-
       </div>
     </section>
   );

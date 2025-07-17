@@ -113,7 +113,7 @@ export const AnimatedTestimonials = ({
                     {testimonials[active].techStack.split(', ').map((tech, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1.5 text-xs lg:text-sm bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200/50 dark:border-blue-700/50 font-medium hover:shadow-lg hover:scale-105 transition-all duration-300 transform hover:-translate-y-1"
+                        className="px-3 py-1.5 text-xs lg:text-sm bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200/50 dark:border-blue-700/50 font-medium"
                         style={{ 
                           animationDelay: `${index * 100}ms`,
                           animation: isIntersecting ? 'fadeInUp 0.6s ease-out forwards' : 'none'

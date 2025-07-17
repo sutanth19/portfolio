@@ -126,3 +126,41 @@
   }
 }
 
+/* Add this to your existing globals.css file */
+
+/* Global Section Spacing */
+.section-spacing {
+  padding-top: 1.5rem;   /* 24px */
+  padding-bottom: 1.5rem;
+}
+.section-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 1rem;   /* px-4 equivalent */
+  padding-right: 1rem;  /* px-4 equivalent */
+}
+
+/* For the first section (Home) - no top padding */
+.section-spacing-first {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .section-container {
+    padding-left: 2rem;   /* md:px-8 equivalent */
+    padding-right: 2rem;  /* md:px-8 equivalent */
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-spacing {
+    padding-top: 2rem;   /* 32px */
+    padding-bottom: 2rem;
+  }
+}
+  
+  .section-spacing-first {
+    padding-bottom: 4rem;
+  }
