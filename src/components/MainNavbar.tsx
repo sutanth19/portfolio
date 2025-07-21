@@ -11,7 +11,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
   { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
+  { label: "Skills", href: "#about" },
   { label: "Projects", href: "#projects" },
   { label: "Contact", href: "#contact" },
 ];
@@ -47,7 +47,7 @@ export default function MainNavbar() {
           </NavigationMenu>
 
           {/* Dark Mode Toggle */}
-          <ThemeToggle />
+         
         </div>
       </div>
     </nav>

@@ -33,7 +33,7 @@ function AnimatedProjectHeader() {
       ref={ref}
       className="flex flex-col md:flex-row items-start md:items-center justify-between text-left mb-8 gap-3"
     >
-      <h2 className={`text-3xl md:text-4xl font-bold transform transition-all duration-1000 ease-out ${
+      <h2 className={`text-3xl md:text-5xl font-bold transform transition-all duration-1000 ease-out ${
         isIntersecting 
           ? 'translate-y-0 opacity-100' 
           : 'translate-y-12 opacity-0'

@@ -131,7 +131,7 @@ function AnimatedHeader() {
       ref={ref}
       className="flex flex-col items-center justify-center text-center mb-12"
     >
-      <h2 className={`text-3xl md:text-4xl font-bold transform transition-all duration-1000 ease-out ${
+      <h2 className={`text-3xl md:text-5xl font-bold transform transition-all duration-1000 ease-out ${
         isIntersecting 
           ? 'translate-y-0 opacity-100' 
           : 'translate-y-8 opacity-0'
