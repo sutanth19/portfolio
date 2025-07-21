@@ -47,7 +47,7 @@ export default function MainNavbar() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <ThemeToggle />
+       
         </div>
 
         {/* Mobile Menu Toggle Button */}
@@ -73,7 +73,7 @@ export default function MainNavbar() {
             </Link>
           ))}
           <div className="mt-2">
-            <ThemeToggle />
+         
           </div>
         </div>
       )}
